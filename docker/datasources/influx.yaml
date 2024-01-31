@@ -1,0 +1,49 @@
+apiVersion: 1
+
+datasources:
+  - name: Measurements (Flux)
+    type: influxdb
+    access: proxy
+    url: ${INFLUX_V2_URL}
+    secureJsonData:
+      token: ${INFLUX_V2_TOKEN}
+    jsonData:
+      version: Flux
+      organization: ${INFLUX_V2_ORGANIZATION}
+      defaultBucket: ${INFLUX_V2_BUCKET_MEASUREMENTS}
+      tlsSkipVerify: true
+
+  - name: Processed (Flux)
+    type: influxdb
+    access: proxy
+    url: ${INFLUX_V2_URL}
+    secureJsonData:
+      token: ${INFLUX_V2_TOKEN}
+    jsonData:
+      version: Flux
+      organization: ${INFLUX_V2_ORGANIZATION}
+      defaultBucket: ${INFLUX_V2_BUCKET_PROCESSED}
+      tlsSkipVerify: true
+
+  - name: Measurements (InfluxQL)
+    type: influxdb
+    access: proxy
+    url: ${INFLUX_V2_URL}
+    database: ${INFLUX_V2_DATABASE_MEASUREMENTS}
+    isDefault: true
+    jsonData:
+      httpMode: GET
+      httpHeaderName1: "Authorization"
+    secureJsonData:
+      httpHeaderValue1: "Token ${INFLUX_V2_TOKEN}"
+
+  - name: Processed (InfluxQL)
+    type: influxdb
+    access: proxy
+    url: ${INFLUX_V2_URL}
+    database: ${INFLUX_V2_DATABASE_PROCESSED}
+    jsonData:
+      httpMode: GET
+      httpHeaderName1: "Authorization"
+    secureJsonData:
+      httpHeaderValue1: "Token ${INFLUX_V2_TOKEN}"

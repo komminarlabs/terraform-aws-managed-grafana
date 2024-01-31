@@ -1,0 +1,20 @@
+version: 0.2
+env:
+  parameter-store:
+    ENDPOINT: /migrations/aurora/endpoint
+    USERNAME: /migrations/aurora/username
+    PASSWORD: /migrations/aurora/password
+
+phases:
+  build:
+    commands:
+      - mkdir $(pwd)/migrations
+      - echo "CREATE ROLE grafana LOGIN PASSWORD '${GRAFANA_PASSWORD}';" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "ALTER ROLE grafana SET search_path TO grafana;" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "ALTER ROLE grafana WITH LOGIN;" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA grafana TO grafana;" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA grafana TO grafana;" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA grafana TO grafana;" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "GRANT CREATE ON SCHEMA grafana TO grafana;" >> $(pwd)/migrations/V1__baseline.sql
+      - echo "GRANT USAGE ON SCHEMA grafana TO grafana;" >> $(pwd)/migrations/V1__baseline.sql
+      - docker run --rm -v $(pwd)/migrations:/flyway/sql boxfuse/flyway -schemas=grafana -url=jdbc:postgresql://${ENDPOINT}/fuseplatform -user=${USERNAME} -password=${PASSWORD} -baselineOnMigrate="true" migrate

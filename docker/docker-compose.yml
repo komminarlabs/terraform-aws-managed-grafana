@@ -1,0 +1,23 @@
+version: '3'
+services:
+  grafana:
+    hostname: grafana
+    command: 'entrypoint.sh'
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - AWS_REGION=eu-central-1
+      - GF_SERVER_ROOT_URL=https://${INFLUXDB_HOST}
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_NAME=fuseplatform
+      - GF_DATABASE_USER=postgres
+      - GF_DATABASE_HOST=172.17.0.1
+      - GF_DATABASE_PORT=5432
+      - GF_DATABASE_PASSWORD={RDS_PASSWORD}
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_USERS_AUTO_ASSIGN_ORG_ROLE=Editor
+      - GF_USERS_EDITORS_CAN_ADMIN=true
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_ANALYTICS_CHECK_FOR_UPDATES=false
+      - GF_USERS_ALLOW_SIGN_UP=false
