@@ -1,7 +1,7 @@
 locals {
   create_iam_role = var.iam_role_arn == null ? true : false
 
-  iam_data_source_policies = {
+  data_source_iam_policies = {
     ATHENA     = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonGrafanaAthenaAccess"
     CLOUDWATCH = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonGrafanaCloudWatchAccess"
     REDSHIFT   = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonGrafanaRedshiftAccess"
@@ -97,7 +97,7 @@ resource "aws_iam_policy" "default" {
 }
 
 resource "aws_iam_role_policy_attachment" "data_sources" {
-  for_each = { for i, v in var.data_sources : v => local.iam_data_source_policies[v] if local.create_iam_role }
+  for_each = { for i, v in var.data_sources : v => local.data_source_iam_policies[v] if local.create_iam_role }
 
   role       = aws_iam_role.default[0].name
   policy_arn = each.value
