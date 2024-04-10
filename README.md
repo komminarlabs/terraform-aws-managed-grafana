@@ -26,6 +26,7 @@ No modules.
 | [aws_grafana_role_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/grafana_role_association) | resource |
 | [aws_grafana_workspace.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/grafana_workspace) | resource |
 | [aws_grafana_workspace_api_key.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/grafana_workspace_api_key) | resource |
+| [aws_grafana_workspace_saml_configuration.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/grafana_workspace_saml_configuration) | resource |
 | [aws_iam_policy.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.data_sources](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -55,6 +56,7 @@ No modules.
 | <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | The Amazon Organizations organizational units that the workspace is authorized to use data sources from | `list(string)` | `[]` | no |
 | <a name="input_permission_type"></a> [permission\_type](#input\_permission\_type) | The permission type of the workspace. If `SERVICE_MANAGED` is specified, the IAM roles and IAM policy attachments are generated automatically. If `CUSTOMER_MANAGED` is specified, the IAM roles and IAM policy attachments will not be created | `string` | `"SERVICE_MANAGED"` | no |
 | <a name="input_role_association"></a> [role\_association](#input\_role\_association) | List of user/group IDs to assocaite to a role | <pre>list(object({<br>    group_ids = optional(list(string))<br>    role      = string<br>    user_ids  = optional(list(string))<br>  }))</pre> | `[]` | no |
+| <a name="input_saml_configuration"></a> [saml\_configuration](#input\_saml\_configuration) | The SAML configuration for the workspace | <pre>object({<br>    admin_role_values       = optional(list(string))<br>    allowed_organizations   = optional(list(string))<br>    editor_role_values      = list(string)<br>    email_assertion         = optional(string)<br>    groups_assertion        = optional(string)<br>    idp_metadata_url        = optional(string)<br>    idp_metadata_xml        = optional(string)<br>    login_assertion         = optional(string)<br>    login_validity_duration = optional(number)<br>    name_assertion          = optional(string)<br>    org_assertion           = optional(string)<br>    role_assertion          = optional(string)<br>  })</pre> | `null` | no |
 | <a name="input_vpc_configuration"></a> [vpc\_configuration](#input\_vpc\_configuration) | The configuration settings for an Amazon VPC that contains data sources for your Grafana workspace to connect to | <pre>object({<br>    security_group_ids = list(string)<br>    subnet_ids         = list(string)<br>  })</pre> | `null` | no |
 | <a name="input_workspace_api_key"></a> [workspace\_api\_key](#input\_workspace\_api\_key) | List of workspace API Key resources to create | <pre>list(object({<br>    name            = string<br>    role            = string<br>    seconds_to_live = number<br>  }))</pre> | `[]` | no |
 
@@ -62,9 +64,10 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_license_expiration"></a> [license\_expiration](#output\_license\_expiration) | If `license_type` is set to `ENTERPRISE`, this is the expiration date of the enterprise license |
-| <a name="output_license_free_trial_expiration"></a> [license\_free\_trial\_expiration](#output\_license\_free\_trial\_expiration) | If `license_type` is set to `ENTERPRISE_FREE_TRIAL`, this is the expiration date of the free trial |
+| <a name="output_license_expiration"></a> [license\_expiration](#output\_license\_expiration) | The expiration date of the enterprise license |
+| <a name="output_license_free_trial_expiration"></a> [license\_free\_trial\_expiration](#output\_license\_free\_trial\_expiration) | The expiration date of the free trial |
 | <a name="output_workspace"></a> [workspace](#output\_workspace) | The Grafana workspace details |
 | <a name="output_workspace_api_keys"></a> [workspace\_api\_keys](#output\_workspace\_api\_keys) | The workspace API keys created including their attributes |
-| <a name="output_workspace_iam_role"></a> [workspace\_iam\_role](#output\_workspace\_iam\_role) | IAM role details of the Grafana workspace |
+| <a name="output_workspace_iam_role"></a> [workspace\_iam\_role](#output\_workspace\_iam\_role) | The IAM role details of the Grafana workspace |
+| <a name="output_workspace_saml"></a> [workspace\_saml](#output\_workspace\_saml) | The Grafana workspace saml configuration details |
 <!-- END_TF_DOCS -->
