@@ -1,6 +1,22 @@
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
+resource "aws_grafana_license_association" "default" {
+  count = var.license_type != null ? 1 : 0
+
+  license_type = var.license_type
+  workspace_id = aws_grafana_workspace.default.id
+}
+
+resource "aws_grafana_role_association" "this" {
+  for_each = { for i, v in var.role_association : v.role => v }
+
+  group_ids    = each.value.group_ids
+  role         = each.value.role
+  user_ids     = each.value.user_ids
+  workspace_id = aws_grafana_workspace.default.id
+}
+
 resource "aws_grafana_workspace" "default" {
   account_access_type       = var.account_access_type
   authentication_providers  = var.authentication_providers
@@ -44,18 +60,20 @@ resource "aws_grafana_workspace_api_key" "default" {
   workspace_id    = aws_grafana_workspace.default.id
 }
 
-resource "aws_grafana_license_association" "default" {
-  count = var.license_type != null ? 1 : 0
+resource "aws_grafana_workspace_saml_configuration" "default" {
+  count = var.saml_configuration != null ? 1 : 0
 
-  license_type = var.license_type
-  workspace_id = aws_grafana_workspace.default.id
-}
-
-resource "aws_grafana_role_association" "this" {
-  for_each = { for i, v in var.role_association : v.role => v }
-
-  group_ids    = each.value.group_ids
-  role         = each.value.role
-  user_ids     = each.value.user_ids
-  workspace_id = aws_grafana_workspace.default.id
+  admin_role_values       = var.saml_configuration.admin_role_values
+  allowed_organizations   = var.saml_configuration.allowed_organizations
+  editor_role_values      = var.saml_configuration.editor_role_values
+  email_assertion         = var.saml_configuration.email_assertion
+  groups_assertion        = var.saml_configuration.groups_assertion
+  idp_metadata_url        = var.saml_configuration.idp_metadata_url
+  idp_metadata_xml        = var.saml_configuration.idp_metadata_xml
+  login_assertion         = var.saml_configuration.login_assertion
+  login_validity_duration = var.saml_configuration.login_validity_duration
+  name_assertion          = var.saml_configuration.name_assertion
+  org_assertion           = var.saml_configuration.org_assertion
+  role_assertion          = var.saml_configuration.role_assertion
+  workspace_id            = aws_grafana_workspace.default.id
 }

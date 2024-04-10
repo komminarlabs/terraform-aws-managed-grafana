@@ -122,6 +122,25 @@ variable "role_association" {
   description = "List of user/group IDs to assocaite to a role"
 }
 
+variable "saml_configuration" {
+  type = object({
+    admin_role_values       = optional(list(string))
+    allowed_organizations   = optional(list(string))
+    editor_role_values      = list(string)
+    email_assertion         = optional(string)
+    groups_assertion        = optional(string)
+    idp_metadata_url        = optional(string)
+    idp_metadata_xml        = optional(string)
+    login_assertion         = optional(string)
+    login_validity_duration = optional(number)
+    name_assertion          = optional(string)
+    org_assertion           = optional(string)
+    role_assertion          = optional(string)
+  })
+  default     = null
+  description = "The SAML configuration for the workspace"
+}
+
 variable "vpc_configuration" {
   type = object({
     security_group_ids = list(string)
